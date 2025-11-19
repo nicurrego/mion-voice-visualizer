@@ -5,12 +5,14 @@ interface MionCharacterProps {
   analyser: AnalyserNode | null;
   isPlaying: boolean;
   imageUrl: string;
+  mistColor?: string; // New prop for emotion color
 }
 
 export const MionCharacter: React.FC<MionCharacterProps> = ({ 
   analyser, 
   isPlaying,
-  imageUrl
+  imageUrl,
+  mistColor = '#38bdf8' // Default to blue (Calm)
 }) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const size = 500; // Base size for the container
@@ -66,14 +68,44 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       
+      <style>{`
+        @keyframes mist-breathe {
+          0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(0.95); }
+          50% { opacity: 0.8; transform: translateX(-50%) scale(1.05); }
+        }
+        .mist-animation {
+          animation: mist-breathe 4s ease-in-out infinite;
+        }
+      `}</style>
+
+      {/* 
+        Layer 0: The Emotion Mist
+        - ALWAYS VISIBLE: Independent of isPlaying
+        - Uses custom keyframe animation for breathing effect
+        - Same size/pos as visualizer
+      */}
+      <div 
+        className="mist-animation absolute z-0 rounded-full"
+        style={{ 
+          width: visWidth, 
+          height: visHeight,
+          bottom: 0,
+          left: '50%',
+          // transform is handled by animation keyframes, but we set initial here for safety/fallback
+          // Note: keyframes override inline transform, so we include translateX in keyframes
+          background: `radial-gradient(circle at center, ${mistColor} 0%, transparent 70%)`,
+          filter: 'blur(30px)',
+        }}
+      />
+
       {/* 
         Layer 1: The Visualizer 
         - Size: 50% of width and height (visWidth, visHeight)
         - Position: Bottom Center (bottom-0, left-1/2)
-        - Z-Index: 0 (Behind image)
+        - Z-Index: 10 (In front of mist, behind image)
       */}
       <div 
-        className="absolute z-0 flex items-center justify-center"
+        className="absolute z-10 flex items-center justify-center"
         style={{ 
           width: visWidth, 
           height: visHeight,
@@ -87,15 +119,15 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
           isPlaying={isPlaying} 
           width={visWidth} 
           height={visHeight}
-          color="#38bdf8" 
+          color={mistColor} // Sync visualizer color with emotion
         />
       </div>
 
       {/* 
         Layer 2: The Mion Character Image
-        Z-index 10 to be in front.
+        Z-index 20 to be in front.
       */}
-      <div className="relative z-10 w-full h-full flex items-center justify-center pointer-events-none">
+      <div className="relative z-20 w-full h-full flex items-center justify-center pointer-events-none">
         <img 
           ref={imageRef}
           src={imageUrl} 
