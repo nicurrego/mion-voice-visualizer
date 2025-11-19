@@ -1,0 +1,5 @@
+{
+  "name": "Mion Voice Visualizer",
+  "description": "A voice visualizer app for the Mion character using Gemini 2.5 Flash TTS.",
+  "requestFramePermissions": []
+}
