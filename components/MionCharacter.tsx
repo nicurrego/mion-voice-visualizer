@@ -16,7 +16,7 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
   const size = 500; 
 
   const visWidth = size * 0.5;
-  const visHeight = size * 0.38;
+  const visHeight = size * 0.33;
 
   useEffect(() => {
     if (!isPlaying || !analyser) {
@@ -86,7 +86,7 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
         style={{ 
           width: visWidth, 
           height: visHeight,
-          bottom: '3.5%',
+          bottom: '13%',
           left: '53%',
           background: '#ff0000', // Solid red base
           opacity: 0.3, 
@@ -103,7 +103,7 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
         style={{ 
           width: visWidth, 
           height: visHeight,
-          bottom: '3.5%',
+          bottom: '0%',
           left: '53%',
           background: `radial-gradient(circle at center, #ff0000 0%, transparent 70%)`,
         }}
@@ -114,7 +114,7 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
         style={{ 
           width: visWidth, 
           height: visHeight,
-          bottom: '3.5%',
+          bottom: '6.5%',
           left: '53%',
           transform: 'translateX(-50%)',
         }}
