@@ -15,6 +15,10 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
   const imageRef = useRef<HTMLImageElement>(null);
   const size = 500; // Base size for the container
 
+  // Dimensions for the visualizer (50% of container)
+  const visWidth = size * 0.5;
+  const visHeight = size * 0.5;
+
   // Audio reactive bounce effect
   useEffect(() => {
     if (!isPlaying || !analyser) {
@@ -64,16 +68,25 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
       
       {/* 
         Layer 1: The Visualizer 
-        Placed absolutely in the center behind the image (z-0).
-        Updated to Blue tones (#38bdf8 - Sky Blue).
-        Width is slightly wider than the container so bars poke out nicely.
+        - Size: 50% of width and height (visWidth, visHeight)
+        - Position: Bottom Center (bottom-0, left-1/2)
+        - Z-Index: 0 (Behind image)
       */}
-      <div className="absolute inset-0 z-0 flex items-center justify-center opacity-90">
+      <div 
+        className="absolute z-0 flex items-center justify-center"
+        style={{ 
+          width: visWidth, 
+          height: visHeight,
+          bottom: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+        }}
+      >
         <Visualizer 
           analyser={analyser} 
           isPlaying={isPlaying} 
-          width={size * 1.4} 
-          height={size * 1.2}
+          width={visWidth} 
+          height={visHeight}
           color="#38bdf8" 
         />
       </div>
@@ -81,16 +94,14 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
       {/* 
         Layer 2: The Mion Character Image
         Z-index 10 to be in front.
-        The image bounces slightly based on audio volume.
       */}
-      <div className="relative z-10 w-full h-full flex items-center justify-center">
+      <div className="relative z-10 w-full h-full flex items-center justify-center pointer-events-none">
         <img 
           ref={imageRef}
           src={imageUrl} 
           alt="Mion Character" 
           className="object-contain w-full h-full drop-shadow-2xl transition-transform duration-75 will-change-transform"
           onError={(e) => {
-            // Fallback if image load fails
             console.warn("Image failed to load, checking path...");
             e.currentTarget.style.opacity = "0.5";
           }}
