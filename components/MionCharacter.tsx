@@ -77,6 +77,23 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
       `}</style>
 
       {/* 
+        Layer -1: Solid Color Background
+        - Behind the mist
+        - Solid color that also cycles through rainbow
+      */}
+      <div 
+        className="mist-animation absolute z-0 rounded-full"
+        style={{ 
+          width: visWidth, 
+          height: visHeight,
+          bottom: '3.5%',
+          left: '53%',
+          background: '#ff0000', // Solid red base
+          opacity: 0.3, 
+        }}
+      />
+
+      {/* 
         Layer 0: The Rainbow Mist
         - Uses hue-rotate to cycle through colors (rainbow)
         - Base color is Red, which rotates through the spectrum
