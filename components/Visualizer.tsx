@@ -5,8 +5,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
   analyser, 
   isPlaying, 
   width, 
-  height,
-  color = '#3b82f6' // Default blue-500
+  height
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -21,8 +20,11 @@ export const Visualizer: React.FC<VisualizerProps> = ({
     canvas.height = height;
 
     let animationId: number;
+    let colorOffset = 0;
 
     const render = () => {
+      colorOffset -= 1; // Move colors for the wave effect
+      
       if (!analyser) {
         ctx.clearRect(0, 0, width, height);
         return;
@@ -34,34 +36,28 @@ export const Visualizer: React.FC<VisualizerProps> = ({
 
       ctx.clearRect(0, 0, width, height);
 
-      // Configuration for Vertical Bars (Waveform style)
-      // We create a mirrored equalizer effect (growing up and down from center)
-      const bars = 20; // Number of bars
-      // We sample from the lower end of the spectrum (bass/vocals) for better movement
+      const bars = 20; 
       const step = Math.floor(bufferLength * 0.6 / bars); 
       
       const barMaxWidth = width / bars;
-      const barWidth = barMaxWidth * 0.6; // Actual bar width
-      const gap = barMaxWidth * 0.4;      // Gap between bars
+      const barWidth = barMaxWidth * 0.6;
+      const gap = barMaxWidth * 0.4;
       
       const centerY = height / 2;
-      // Calculate total width to center the visualization horizontally
       const totalVisualizerWidth = bars * barMaxWidth;
       const startX = (width - totalVisualizerWidth) / 2 + (gap / 2);
 
       for (let i = 0; i < bars; i++) {
-        // Get frequency value
         const value = dataArray[i * step];
-        
-        // Scale value to height
-        // Maximum height is 90% of the canvas height
         const barHeight = Math.max(4, (value / 255) * height * 0.9); 
 
         const x = startX + i * barMaxWidth;
         const y = centerY - barHeight / 2;
         
-        // Create a gradient for the bar
-        // Middle is solid color, tips fade out slightly
+        // Rainbow Logic: Cycle hue based on position and time
+        const hue = (i * 15 + colorOffset) % 360;
+        const color = `hsl(${hue}, 90%, 60%)`;
+
         const gradient = ctx.createLinearGradient(x, centerY - barHeight/2, x, centerY + barHeight/2);
         gradient.addColorStop(0, 'rgba(255, 255, 255, 0.2)'); 
         gradient.addColorStop(0.2, color);
@@ -70,12 +66,11 @@ export const Visualizer: React.FC<VisualizerProps> = ({
 
         ctx.fillStyle = gradient;
         
-        // Add glow effect
+        // Rainbow Glow
         ctx.shadowBlur = 20;
         ctx.shadowColor = color;
 
         ctx.beginPath();
-        // Use roundRect if supported, otherwise rect
         if (ctx.roundRect) {
             ctx.roundRect(x, y, barWidth, barHeight, 20);
         } else {
@@ -83,7 +78,6 @@ export const Visualizer: React.FC<VisualizerProps> = ({
         }
         ctx.fill();
         
-        // Reset shadow for performance or next elements
         ctx.shadowBlur = 0;
       }
 
@@ -101,7 +95,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
     return () => {
       cancelAnimationFrame(animationId);
     };
-  }, [analyser, isPlaying, width, height, color]);
+  }, [analyser, isPlaying, width, height]);
 
   return (
     <canvas 

@@ -1,18 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MionCharacter } from './components/MionCharacter';
 import { generateSpeech } from './services/geminiService';
-import { Mic, Play, Square, Loader2, AlertCircle, Heart, Zap, Smile, Coffee } from 'lucide-react';
+import { Play, Square, Loader2, AlertCircle } from 'lucide-react';
 
 // Updated path: Standard web servers map the public directory to root.
 const MION_IMAGE_URL = "/image/TheMION.png"; 
-
-// Emotion definitions for the mist color
-const EMOTIONS = [
-  { name: 'Calm', color: '#0051ffff', icon: Coffee },      
-  { name: 'Happy', color: '#ff5e00ff', icon: Smile },      
-  { name: 'Love', color: '#ff002bff', icon: Heart },       
-  { name: 'Energetic', color: '#8400ffff', icon: Zap },   
-];
 
 const App: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -20,9 +12,6 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [promptText, setPromptText] = useState("Hello! I am Mion, your relaxing spa companion. I'm here to help you unwind. Let's take a deep breath together!");
   
-  // Emotion State
-  const [currentEmotion, setCurrentEmotion] = useState(EMOTIONS[0]);
-
   // Audio Refs
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -111,17 +100,13 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
       
-      {/* Background Decoration (Dynamic based on emotion) */}
+      {/* Background Decoration (Rainbow Gradient) */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-        <div 
-          className="absolute top-10 left-10 w-64 h-64 rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-pulse transition-colors duration-1000"
-          style={{ backgroundColor: currentEmotion.color }}
-        ></div>
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-slate-700 rounded-full mix-blend-overlay filter blur-3xl opacity-10"></div>
+        <div className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] bg-[radial-gradient(circle,rgba(56,189,248,0.1)_0%,rgba(15,23,42,0)_70%)] animate-pulse"></div>
       </div>
 
       <header className="z-10 mb-4 text-center">
-        <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500">
+        <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 animate-[pulse_4s_ease-in-out_infinite]">
           Mion Voice
         </h1>
         <p className="text-slate-400">Powered by Gemini 2.5 Flash TTS</p>
@@ -133,45 +118,18 @@ const App: React.FC = () => {
           analyser={analyserRef.current} 
           isPlaying={isPlaying}
           imageUrl={MION_IMAGE_URL}
-          mistColor={currentEmotion.color}
         />
       </div>
 
       {/* Controls */}
       <div className="z-10 w-full max-w-lg bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-2xl p-6 shadow-xl">
         
-        {/* Emotion Selector */}
-        <div className="mb-6">
-          <label className="block text-xs font-medium text-slate-400 mb-3 uppercase tracking-wider">
-            Current Emotion (Mist Color)
-          </label>
-          <div className="flex justify-between gap-2 bg-slate-900/50 p-1 rounded-xl">
-            {EMOTIONS.map((emotion) => (
-              <button
-                key={emotion.name}
-                onClick={() => setCurrentEmotion(emotion)}
-                className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-lg text-xs font-medium transition-all duration-200
-                  ${currentEmotion.name === emotion.name 
-                    ? 'bg-slate-700 text-white shadow-md' 
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-slate-300'
-                  }`}
-              >
-                <emotion.icon 
-                  size={18} 
-                  color={currentEmotion.name === emotion.name ? emotion.color : 'currentColor'} 
-                />
-                {emotion.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
         <div className="mb-4">
           <label className="block text-sm font-medium text-slate-300 mb-2">
             What should Mion say?
           </label>
           <textarea 
-            className="w-full bg-slate-900/80 border border-slate-700 rounded-lg p-3 text-slate-200 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none resize-none transition-all"
+            className="w-full bg-slate-900/80 border border-slate-700 rounded-lg p-3 text-slate-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none transition-all"
             rows={3}
             value={promptText}
             onChange={(e) => setPromptText(e.target.value)}
@@ -209,14 +167,11 @@ const App: React.FC = () => {
                <button 
                 onClick={handleSpeak}
                 disabled={isLoading || !promptText.trim()}
-                className={`flex items-center gap-2 px-6 py-2 rounded-full font-semibold text-slate-900 transition-all shadow-[0_0_20px_rgba(0,0,0,0.2)]
+                className={`flex items-center gap-2 px-6 py-2 rounded-full font-semibold text-white transition-all shadow-[0_0_20px_rgba(0,0,0,0.2)]
                   ${isLoading || !promptText.trim() 
                     ? 'bg-slate-600 cursor-not-allowed opacity-50' 
-                    : 'hover:brightness-110'
+                    : 'bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 hover:brightness-110'
                   }`}
-                style={{
-                  backgroundColor: isLoading || !promptText.trim() ? undefined : currentEmotion.color
-                }}
                >
                  {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Play size={18} fill="currentColor" />}
                  Say Hello
