@@ -8,10 +8,10 @@ const MION_IMAGE_URL = "/image/TheMION.png";
 
 // Emotion definitions for the mist color
 const EMOTIONS = [
-  { name: 'Calm', color: '#38bdf8', icon: Coffee },      // Blue
-  { name: 'Happy', color: '#facc15', icon: Smile },      // Yellow
-  { name: 'Love', color: '#f43f5e', icon: Heart },       // Pink/Red
-  { name: 'Energetic', color: '#a855f7', icon: Zap },    // Purple
+  { name: 'Calm', color: '#0051ffff', icon: Coffee },      
+  { name: 'Happy', color: '#ff5e00ff', icon: Smile },      
+  { name: 'Love', color: '#ff002bff', icon: Heart },       
+  { name: 'Energetic', color: '#8400ffff', icon: Zap },   
 ];
 
 const App: React.FC = () => {
@@ -109,7 +109,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
       
       {/* Background Decoration (Dynamic based on emotion) */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">

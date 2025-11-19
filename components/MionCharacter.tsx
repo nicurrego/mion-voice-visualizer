@@ -19,7 +19,7 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
 
   // Dimensions for the visualizer (50% of container)
   const visWidth = size * 0.5;
-  const visHeight = size * 0.5;
+  const visHeight = size * 0.38;
 
   // Audio reactive bounce effect
   useEffect(() => {
@@ -39,7 +39,7 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
 
       // Calculate average volume from lower frequencies (speech range)
       let sum = 0;
-      const speechRange = Math.floor(bufferLength * 0.5); // Use lower half of spectrum
+      const speechRange = Math.floor(bufferLength * 0.7); // Use lower half of spectrum
       for (let i = 0; i < speechRange; i++) {
         sum += dataArray[i];
       }
@@ -70,7 +70,7 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
       
       <style>{`
         @keyframes mist-breathe {
-          0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(0.95); }
+          0%, 100% { opacity: 0.7; transform: translateX(-50%) scale(0.95); }
           50% { opacity: 0.8; transform: translateX(-50%) scale(1.05); }
         }
         .mist-animation {
@@ -89,12 +89,12 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
         style={{ 
           width: visWidth, 
           height: visHeight,
-          bottom: 0,
-          left: '50%',
+          bottom: '3.5%',
+          left: '53%',
           // transform is handled by animation keyframes, but we set initial here for safety/fallback
           // Note: keyframes override inline transform, so we include translateX in keyframes
-          background: `radial-gradient(circle at center, ${mistColor} 0%, transparent 70%)`,
-          filter: 'blur(30px)',
+          background: `radial-gradient(circle at center, ${mistColor} 0%, transparent 90%)`,
+          filter: 'blur(5px)',
         }}
       />
 
@@ -109,8 +109,8 @@ export const MionCharacter: React.FC<MionCharacterProps> = ({
         style={{ 
           width: visWidth, 
           height: visHeight,
-          bottom: 0,
-          left: '50%',
+          bottom: '3.5%',
+          left: '53%',
           transform: 'translateX(-50%)',
         }}
       >
